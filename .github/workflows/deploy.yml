@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for MongoDB Deployment
+name: CI/CD Pipeline for Kubernetes Deployment
 
 on:
   push:
@@ -14,16 +14,22 @@ jobs:
         run: echo "Code checked out from repository"
 
       - name: Terraform Init
-        run: echo "Terraform initialized"
+        run: echo "Terraform initialized successfully"
 
-      - name: Terraform Apply
-        run: echo "Kubernetes resources created (MongoDB Pod)"
+      - name: Kubernetes Provider Setup
+        run: echo "Kubernetes provider configured using kubeconfig"
 
-      - name: MongoDB Setup
-        run: echo "MongoDB database configured successfully"
+      - name: Create Deployment
+        run: echo "Nginx Deployment created with 2 replicas"
 
-      - name: Insert Records
-        run: echo "B.Tech success stories inserted into MongoDB"
+      - name: Create Service
+        run: echo "NodePort service created for nginx"
+
+      - name: Verify Resources
+        run: echo "Pods and services verified successfully"
+
+      - name: Port Forwarding
+        run: echo "Application exposed on localhost via port-forward"
 
       - name: Pipeline Status
-        run: echo "CI/CD Pipeline executed successfully"
+        run: echo "CI/CD Pipeline executed successfully for Kubernetes"

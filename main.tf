@@ -1,46 +1,38 @@
-# =====================================
-# Variable to control Kubernetes in CI
-# =====================================
-variable "enable_k8s" {
-  default = true
+provider "kubernetes" {
+  config_path = "~/.kube/config"
 }
 
-# =====================================
-# MongoDB Deployment
-# =====================================
-resource "kubernetes_deployment_v1" "mongodb" {
-  count = var.enable_k8s ? 1 : 0
-
+resource "kubernetes_deployment" "nginx_deployment" {
   metadata {
-    name = "mongodb-deployment"
+    name = "nginx-deployment"
     labels = {
-      app = "mongodb"
+      app = "nginx"
     }
   }
 
   spec {
-    replicas = 1
+    replicas = 2
 
     selector {
       match_labels = {
-        app = "mongodb"
+        app = "nginx"
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "mongodb"
+          app = "nginx"
         }
       }
 
       spec {
         container {
-          name  = "mongodb"
-          image = "mongo:latest"
+          image = "nginx:latest"
+          name  = "nginx-container"
 
           port {
-            container_port = 27017
+            container_port = 80
           }
         }
       }
@@ -48,24 +40,19 @@ resource "kubernetes_deployment_v1" "mongodb" {
   }
 }
 
-# =====================================
-# MongoDB Service
-# =====================================
-resource "kubernetes_service_v1" "mongodb_service" {
-  count = var.enable_k8s ? 1 : 0
-
+resource "kubernetes_service" "nginx_service" {
   metadata {
-    name = "mongodb-service"
+    name = "nginx-service"
   }
 
   spec {
     selector = {
-      app = "mongodb"
+      app = "nginx"
     }
 
     port {
-      port        = 27017
-      target_port = 27017
+      port        = 80
+      target_port = 80
     }
 
     type = "NodePort"
