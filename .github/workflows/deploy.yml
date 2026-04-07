@@ -1,3 +1,4 @@
+cat <<EOF > .github/workflows/deploy.yml
 name: Terraform Deploy
 
 on:
@@ -10,8 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "\${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -21,3 +27,4 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+EOF
